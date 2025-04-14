@@ -1,11 +1,5 @@
 #!/bin/bash
 
-# This script will set up the postgres environment
-# based done evn vars passed to then docker container
-
-# Tim Sutton, April 2015
-
-
 # Check if each var is declared and if not,
 # set a sensible default
 
@@ -26,32 +20,36 @@ if [ -z "${POSTGRES_HOST}" ]; then
 fi
 
 if [ -z "${POSTGRES_DBNAME}" ]; then
-  POSTGRES_DBNAME=gis
+  POSTGRES_DBNAME="postgres"
+fi
+ 
+
+if [ -z "${GD_CLEAN_DAYS_OLD}" ]; then
+  GD_CLEAN_DAYS_OLD=30
+fi
+ 
+
+if [ -z "${BUCKET}" ]; then
+	BUCKET=backups
 fi
 
-if [ -z "${DUMPPREFIX}" ]; then
-  DUMPPREFIX=PG
-fi
-
-# Now write these all to case file that can be sourced
-# by then cron job - we need to do this because
-# env vars passed to docker will not be available
-# in then contenxt of then running cron script.
-
+# Write environment variables to pgenv.sh
 echo "
 export PGUSER=$POSTGRES_USER
 export PGPASSWORD=\"$POSTGRES_PASS\"
 export PGPORT=$POSTGRES_PORT
 export PGHOST=$POSTGRES_HOST
-export PGDATABASE=$POSTGRES_DBNAME
-export DUMPPREFIX=$DUMPPREFIX
-export ARCHIVE_FILENAME="${ARCHIVE_FILENAME}"
+export PGDATABASE=$POSTGRES_DBNAME 
+export ARCHIVE_FILENAME=${ARCHIVE_FILENAME}
 export GD_DIR=$GD_FOLDER
- " > /pgenv.sh
+export GD_DAYS_OLD=$GD_CLEAN_DAYS_OLD
+export BUCKET=\"${BUCKET}\"
+
+" > /pgenv.sh
 
 echo "Start script running with these environment options"
 set | grep PG
 
-# Now launch cron in then foreground.
-
-cron -f
+# Launch cron in the foreground
+cron -f 
+ 
