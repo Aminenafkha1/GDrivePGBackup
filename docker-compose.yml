@@ -1,0 +1,50 @@
+ 
+
+services:
+  postgres:
+    container_name: potsdb
+    image: postgres:16
+    environment:
+      POSTGRES_DB: mydatabase
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+    volumes:
+      - postgresql_data2:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - mynetwork
+  dbbackup:
+    build: .
+    volumes: 
+      - ./backup-configs/cron.log:/var/log/cron.log    
+      - ./backup-configs/rclone.conf:/root/.config/rclone/rclone.conf   
+      - ./backup-configs/gdrive_config.json:/root/.config/rclone/gdrive_config.json   
+
+    ports:
+      - "53682:53682"
+    environment: 
+      - POSTGRES_HOST=potsdb
+      - POSTGRES_DBNAME=nafkha
+      - POSTGRES_USER=myuser
+      - POSTGRES_PASS=mypassword
+      - POSTGRES_PORT=5432
+      - GD_FOLDER=16ARKsCHv99Sl4MKDljDQyPWE8mlyqnSs
+      - BUCKET=bmdrm-backups
+      # For restore script
+      - TARGET_DB=gis
+      - WITH_POSTGIS=1 
+      # For cleanup script
+      - GD_CLEAN_DAYS_OLD=30
+    networks:
+      - mynetwork
+
+networks:
+  mynetwork:
+    driver: bridge
+
+volumes:
+  timescaledb_volumes:
+  pgadmin-data:
+  postgresql_data2:
+ 
