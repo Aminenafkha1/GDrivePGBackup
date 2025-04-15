@@ -1,6 +1,0 @@
-0 23 * * *  root date >> /var/log/cron.log
-0 23 * * *  root /backups.sh >> /var/log/cron.log 
-0 23 * * * root /cleanup.sh >> /var/log/cron.log
-
- 
- 
