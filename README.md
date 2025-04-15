@@ -37,6 +37,7 @@ The `backup-configs/` folder must include the following files:
   type = drive
   scope = drive
   service_account_file = /root/.config/rclone/gdrive_config.json
+  root_folder_id
  - `gdrive_config.json` – Google Drive service account credentials file, downloaded from your Google Cloud Console. Used by rclone for authentication via the service_account_file. 
 
 
