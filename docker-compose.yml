@@ -29,7 +29,7 @@ services:
       - POSTGRES_USER=myuser
       - POSTGRES_PASS=mypassword
       - POSTGRES_PORT=5432
-      - GD_FOLDER=16ARKsCHv99Sl4MKDljDQyPWE8mlyqnSs
+      - GD_FOLDER= ###FOLDER ID Here
       - BUCKET=bmdrm-backups
       # For restore script
       - TARGET_DB=gis
